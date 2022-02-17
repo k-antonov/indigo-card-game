@@ -89,7 +89,7 @@ class Game {
                     choice = readLine().toString()
                     if (choice == "exit") return -1
                 } while (choice.toIntOrNull() !in 1..hand.size)
-                return choice.toInt()
+                return choice.toInt() - 1
             }
 
             fun printHand() {
@@ -103,7 +103,10 @@ class Game {
             if (!drawnSuccessfulIfHadTo()) return false
 
             printHand()
-            return putCardOnTable(makeChoice() - 1)
+
+            val choice = makeChoice()
+            if (choice == -1) return false
+            return putCardOnTable(choice)
         }
     }
 
