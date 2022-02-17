@@ -58,14 +58,7 @@ class Game {
         var hand = mutableListOf<String>()
 
         init {
-            draw()
-        }
-
-        protected fun draw(): Boolean {
-            if (hand.isEmpty() && deck.isNotEmpty()) {
-                moveCards(deck, hand, cardsToDraw)
-                return true
-            } else return !(hand.isEmpty() && deck.isEmpty())
+            moveCards(deck, hand, cardsToDraw)
         }
 
         protected fun putCardOnTable(num: Int): Boolean {
@@ -74,6 +67,14 @@ class Game {
                 hand.removeAt(num)
                 true
             } else false
+        }
+
+        fun drawnSuccessfulIfHadTo(): Boolean {
+            if (hand.isEmpty()) {
+                if (deck.isEmpty()) return false
+                moveCards(deck, hand, cardsToDraw)
+            }
+            return true
         }
 
         abstract fun takeTurn(): Boolean
@@ -99,7 +100,8 @@ class Game {
                 println()
             }
 
-            if (!draw()) return false
+            if (!drawnSuccessfulIfHadTo()) return false
+
             printHand()
             return putCardOnTable(makeChoice() - 1)
         }
@@ -107,7 +109,7 @@ class Game {
 
     private inner class AIPlayer: Player() {
         override fun takeTurn(): Boolean {
-            if (!draw()) return false
+            if (!drawnSuccessfulIfHadTo()) return false
             println("Computer plays ${hand[hand.lastIndex]}\n")
             return putCardOnTable(hand.lastIndex)
         }
