@@ -19,15 +19,14 @@ class Game {
 
     private fun startTheGame() {
         fun loopGame(player1: Player, player2: Player) {
-            fun printInfoAndTakeTurn(player: Player): String {
+            fun printInfoAndTakeTurn(player: Player): Boolean {
                 println("${table.size} cards on the table, and the top card is ${table[table.lastIndex]}")
-                return if (player.takeTurn() == "exit") "exit"
-                else "continue"
+                return player.takeTurn()
             }
 
             while (true) {
-                if (printInfoAndTakeTurn(player1) == "exit") return
-                if (printInfoAndTakeTurn(player2) == "exit") return
+                if (!printInfoAndTakeTurn(player1)) return
+                if (!printInfoAndTakeTurn(player2)) return
             }
         }
 
@@ -69,19 +68,19 @@ class Game {
             } else return !(hand.isEmpty() && deck.isEmpty())
         }
 
-        protected fun putCardOnTable(num: Int): String {
+        protected fun putCardOnTable(num: Int): Boolean {
             return if (num >= 0) {
                 table.add(hand[num])
                 hand.removeAt(num)
-                "continue"
-            } else "exit"
+                true
+            } else false
         }
 
-        abstract fun takeTurn(): String
+        abstract fun takeTurn(): Boolean
     }
 
     private inner class UserPlayer: Player() {
-        override fun takeTurn(): String {
+        override fun takeTurn(): Boolean {
             fun makeChoice(): Int {
                 var choice: String
                 do {
@@ -100,15 +99,15 @@ class Game {
                 println()
             }
 
-            if (!draw()) return "exit"
+            if (!draw()) return false
             printHand()
             return putCardOnTable(makeChoice() - 1)
         }
     }
 
     private inner class AIPlayer: Player() {
-        override fun takeTurn(): String {
-            if (!draw()) return "exit"
+        override fun takeTurn(): Boolean {
+            if (!draw()) return false
             println("Computer plays ${hand[hand.lastIndex]}\n")
             return putCardOnTable(hand.lastIndex)
         }
