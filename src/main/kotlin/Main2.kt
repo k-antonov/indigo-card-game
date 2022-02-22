@@ -1,5 +1,5 @@
 // package indigo
-class Game {
+class Game1 {
     private val initTableCards = 4
     private val cardsToDraw = 6
     private var deck: MutableList<String> =
@@ -61,12 +61,9 @@ class Game {
             moveCards(deck, hand, cardsToDraw)
         }
 
-        protected fun putCardOnTable(num: Int): Boolean {
-            return if (num >= 0) {
-                table.add(hand[num])
-                hand.removeAt(num)
-                true
-            } else false
+        protected fun putCardOnTable(num: Int): Unit {
+            table.add(hand[num])
+            hand.removeAt(num)
         }
 
         fun drawnSuccessfulIfHadTo(): Boolean {
@@ -106,7 +103,8 @@ class Game {
 
             val choice = makeChoice()
             if (choice == -1) return false
-            return putCardOnTable(choice)
+            putCardOnTable(choice)
+            return true
         }
     }
 
@@ -114,11 +112,13 @@ class Game {
         override fun takeTurn(): Boolean {
             if (!drawnSuccessfulIfHadTo()) return false
             println("Computer plays ${hand[hand.lastIndex]}\n")
-            return putCardOnTable(hand.lastIndex)
+            putCardOnTable(hand.lastIndex)
+            return true
         }
     }
 }
 
 fun main() {
-    Game()
+    //Game1()
+    println("content".substringBefore("c"))
 }
