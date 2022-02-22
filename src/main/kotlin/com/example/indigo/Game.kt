@@ -1,30 +1,33 @@
 package com.example.indigo
 
 fun main() {
-    val winner = play(Game)
-    when (winner) {
-        null -> println(Message.GAME_OVER)
-        true -> println("You win!")
-        false -> println("You lose.")
-    }
-}
-
-fun play(game: Game): Boolean? {
-    val humanFirst = Game.playFirst() ?: return null
-    while (!Game.isFinished) {
-        // render the table and player hand
-        // input
-    }
-    return true
+    Game.play()
 }
 
 object Game {
-    var isFinished: Boolean = false
+    private var isFinished: Boolean = false
 //    val table = Table()
-    val players = listOf(HumanPlayer, AIPlayer)
+    private val players = listOf(HumanPlayer, AIPlayer)
     // todo add winner
 
-    fun playFirst(): Boolean? {
+    fun play() {
+        when (determineTheWinner()) {
+            null -> println(Message.GAME_OVER)
+            true -> println("You win!")
+            false -> println("You lose.")
+        }
+    }
+
+    private fun determineTheWinner(): Boolean? {
+        val humanFirst = Game.playFirst() ?: return null
+        while (!Game.isFinished) {
+            // render the table and player hand
+            // input
+        }
+        return true
+    }
+
+    private fun playFirst(): Boolean? {
         println(Message.GAME_NAME.text)
         var answer: String?
         do {
