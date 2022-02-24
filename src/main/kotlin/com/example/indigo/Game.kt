@@ -7,22 +7,32 @@ fun main() {
 object Game {
     private var isFinished: Boolean = false
 //    val table = Table()
-    private val players = listOf(HumanPlayer, AIPlayer)
+//    private val players = listOf(HumanPlayer, AIPlayer)
     // todo add winner
 
     fun play() {
         when (determineTheWinner()) {
             null -> println(Message.GAME_OVER)
-            true -> println("You win!")
-            false -> println("You lose.")
+            true -> println(Message.WIN)
+            false -> println(Message.LOSE)
         }
     }
 
     private fun determineTheWinner(): Boolean? {
-        val humanFirst = Game.playFirst() ?: return null
+        var humanTurn = Game.playFirst() ?: return null
+        Table.printInitialCards()
         while (!Game.isFinished) {
-            // render the table and player hand
-            // input
+            Table.render()
+            if (humanTurn) {
+                HumanPlayer.displayHand()
+                if (!HumanPlayer.chooseCard()) return null
+                humanTurn = false
+                continue
+            } else {
+                println("AI TURN")
+                humanTurn = true
+                continue
+            }
         }
         return true
     }
@@ -46,8 +56,15 @@ object Table {
         DrawDeck.putCards(PutDeck, initCardsAmount)
     }
 
-    fun render() {
+    fun printInitialCards() {
+        val firstCards = PutDeck.collection.joinToString(" ")
+        println(Message.INIT_TABLE_CARDS.text.format(firstCards))
+    }
 
+    fun render() {
+        val size = PutDeck.collection.size
+        val topCard = PutDeck.collection.last()
+        println(Message.TABLE_RENDER.text.format(size, topCard))
     }
 }
 

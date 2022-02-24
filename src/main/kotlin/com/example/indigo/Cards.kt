@@ -17,19 +17,19 @@ object PutDeck : Deck {
     override var collection = ArrayDeque<Card>()
 }
 
-interface Deck : CardCollection {
-    override fun putCards(to: CardCollection, amount: Int): Boolean {
+interface Deck : CardCollection
+
+// изменить метод putCards, чтобы он полиморфно мог работать
+// и с колодами, и с рукой. Возможно, с помощью дженериков
+interface CardCollection {
+    var collection: ArrayDeque<Card>
+
+    fun putCards(to: CardCollection, amount: Int): Boolean {
         if (this.collection.size < amount) return false
         to.collection.addAll(this.collection.takeLast(amount))
         repeat(amount) { this.collection.removeLast() }
         return true
     }
-}
-
-interface CardCollection {
-    var collection: ArrayDeque<Card>
-
-    fun putCards(to: CardCollection, amount: Int): Boolean
 }
 
 class Card(private val rank: Rank, private val suit: Suit) {
