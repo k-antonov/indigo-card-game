@@ -20,12 +20,12 @@ object Game {
         var humanTurn = playFirst() ?: return null
         Table.printInitialCards()
         while (!isFinished) {
-            Table.render() // вызывается три раза, потому что игроки берут карты, а это не выводится на консоль
+            Table.render()
             humanTurn = if (humanTurn) {
                 if (!HumanPlayer.takeTurn()) return null
                 false
             } else {
-                AIPlayer.takeTurn()
+                if (!AIPlayer.takeTurn()) return null
                 true
             }
         }

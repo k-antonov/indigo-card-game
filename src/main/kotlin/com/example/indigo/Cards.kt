@@ -24,7 +24,7 @@ interface CardCollection {
 
     fun putCards(to: CardCollection,
                  amount: Int,
-                 pos: Int = this.collection.lastIndex - amount): Boolean {
+                 pos: Int = this.collection.size - amount): Boolean { // todo подумать почему замена на this.collection.size ничего не сломала
         if (this.collection.size < amount) return false
         val elementsToMove = this.collection.subList(pos, pos + amount)
         to.collection.addAll(elementsToMove)
