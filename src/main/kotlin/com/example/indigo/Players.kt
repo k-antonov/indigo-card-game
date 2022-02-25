@@ -3,7 +3,7 @@ package com.example.indigo
 abstract class Player {
     protected val hand = Hand()
     companion object {
-        val cardsToDraw = 6
+        const val cardsToDraw = 6
     }
 
     init {
@@ -12,6 +12,10 @@ abstract class Player {
 
     protected class Hand : CardCollection {
         override var collection = ArrayDeque<Card>()
+
+        override fun putCards(to: CardCollection, amount: Int, pos: Int): Boolean {
+            return super.putCards(to, amount, pos - 1)
+        }
     }
 }
 
@@ -33,7 +37,7 @@ object HumanPlayer : Player() {
             choice = readLine().toString()
             if (choice == "exit") return false
         } while (choice.toIntOrNull() !in 1..size)
-
+        hand.putCards(PutDeck, 1, choice.toInt())
         println()
         return true
     }

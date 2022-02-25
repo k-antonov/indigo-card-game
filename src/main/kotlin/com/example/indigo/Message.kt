@@ -7,6 +7,7 @@ enum class Message(val text: String) {
     TABLE_RENDER("%d cards on the table, and the top card is %s"),
     HAND("Cards in hand:%s"),
     CHOOSE("Choose a card to play %s"),
+    AI_TURN("Computer plays %s"),
     WIN("You win!"),
     LOSE("You lose."),
     GAME_OVER("Game Over");

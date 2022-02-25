@@ -24,12 +24,22 @@ interface Deck : CardCollection
 interface CardCollection {
     var collection: ArrayDeque<Card>
 
-    fun putCards(to: CardCollection, amount: Int): Boolean {
+    fun putCards(to: CardCollection,
+                 amount: Int,
+                 pos: Int = this.collection.lastIndex - amount): Boolean {
         if (this.collection.size < amount) return false
-        to.collection.addAll(this.collection.takeLast(amount))
-        repeat(amount) { this.collection.removeLast() }
+        val elementsToMove = this.collection.subList(pos, pos + amount)
+        to.collection.addAll(elementsToMove)
+        this.collection.removeAll(elementsToMove)
         return true
     }
+
+//    fun putCards(to: CardCollection, amount: Int): Boolean {
+//        if (this.collection.size < amount) return false
+//        to.collection.addAll(this.collection.takeLast(amount))
+//        repeat(amount) { this.collection.removeLast() }
+//        return true
+//    }
 }
 
 class Card(private val rank: Rank, private val suit: Suit) {
