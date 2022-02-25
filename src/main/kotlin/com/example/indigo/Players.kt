@@ -10,6 +10,8 @@ abstract class Player {
         DrawDeck.putCards(hand, cardsToDraw)
     }
 
+    abstract fun chooseCard(): Boolean
+
     protected class Hand : CardCollection {
         override var collection = ArrayDeque<Card>()
 
@@ -28,7 +30,7 @@ object HumanPlayer : Player() {
         println(Message.HAND.text.format(indexesAndCards))
     }
 
-    fun chooseCard(): Boolean {
+    override fun chooseCard(): Boolean {
         var choice = ""
         val size = hand.collection.size
         val range = "(1-$size):"
@@ -44,6 +46,9 @@ object HumanPlayer : Player() {
 }
 
 object AIPlayer : Player() {
-//    override val hand: Player.Hand
-//        get() = TODO("Not yet implemented")
+    override fun chooseCard(): Boolean {
+        hand.putCards(PutDeck, 1, 1)
+        println(Message.AI_TURN.text.format(hand.collection[0]))
+        return true
+    }
 }

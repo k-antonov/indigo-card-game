@@ -19,8 +19,6 @@ object PutDeck : Deck {
 
 interface Deck : CardCollection
 
-// изменить метод putCards, чтобы он полиморфно мог работать
-// и с колодами, и с рукой. Возможно, с помощью дженериков
 interface CardCollection {
     var collection: ArrayDeque<Card>
 
@@ -33,13 +31,6 @@ interface CardCollection {
         this.collection.removeAll(elementsToMove)
         return true
     }
-
-//    fun putCards(to: CardCollection, amount: Int): Boolean {
-//        if (this.collection.size < amount) return false
-//        to.collection.addAll(this.collection.takeLast(amount))
-//        repeat(amount) { this.collection.removeLast() }
-//        return true
-//    }
 }
 
 class Card(private val rank: Rank, private val suit: Suit) {

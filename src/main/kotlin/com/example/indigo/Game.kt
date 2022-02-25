@@ -29,7 +29,7 @@ object Game {
                 humanTurn = false
                 continue
             } else {
-                println("AI TURN")
+                AIPlayer.chooseCard()
                 humanTurn = true
                 continue
             }
