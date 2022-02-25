@@ -10,7 +10,24 @@ abstract class Player {
         DrawDeck.putCards(hand, cardsToDraw)
     }
 
-    abstract fun chooseCard(): Boolean
+    protected abstract fun displayHand(): Unit
+
+    protected abstract fun chooseCard(): Boolean
+
+    fun takeTurn(): Boolean {
+        if (hand.isEmpty()) {
+            if (DrawDeck.isEmpty()) {
+                println("All empty")
+                return false
+            }
+            draw()
+        }
+        displayHand()
+        if (!chooseCard()) return false
+        return true
+    }
+
+    private fun draw() = DrawDeck.putCards(hand, cardsToDraw)
 
     protected class Hand : CardCollection {
         override var collection = ArrayDeque<Card>()
@@ -22,7 +39,7 @@ abstract class Player {
 }
 
 object HumanPlayer : Player() {
-    fun displayHand() {
+    override fun displayHand() {
         var indexesAndCards = ""
         hand.collection.forEachIndexed { index, card ->
             indexesAndCards += " ${index + 1})$card"
@@ -46,9 +63,11 @@ object HumanPlayer : Player() {
 }
 
 object AIPlayer : Player() {
+    override fun displayHand() {}
+
     override fun chooseCard(): Boolean {
-        hand.putCards(PutDeck, 1, 1)
         println(Message.AI_TURN.text.format(hand.collection[0]))
+        hand.putCards(PutDeck, 1, 1)
         return true
     }
 }

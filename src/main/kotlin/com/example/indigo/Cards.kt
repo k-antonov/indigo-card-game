@@ -31,6 +31,8 @@ interface CardCollection {
         this.collection.removeAll(elementsToMove)
         return true
     }
+
+    fun isEmpty() = collection.isEmpty()
 }
 
 class Card(private val rank: Rank, private val suit: Suit) {

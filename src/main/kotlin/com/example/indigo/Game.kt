@@ -6,8 +6,6 @@ fun main() {
 
 object Game {
     private var isFinished: Boolean = false
-//    val table = Table()
-//    private val players = listOf(HumanPlayer, AIPlayer)
     // todo add winner
 
     fun play() {
@@ -19,19 +17,16 @@ object Game {
     }
 
     private fun determineTheWinner(): Boolean? {
-        var humanTurn = Game.playFirst() ?: return null
+        var humanTurn = playFirst() ?: return null
         Table.printInitialCards()
-        while (!Game.isFinished) {
-            Table.render()
-            if (humanTurn) {
-                HumanPlayer.displayHand()
-                if (!HumanPlayer.chooseCard()) return null
-                humanTurn = false
-                continue
+        while (!isFinished) {
+            Table.render() // вызывается три раза, потому что игроки берут карты, а это не выводится на консоль
+            humanTurn = if (humanTurn) {
+                if (!HumanPlayer.takeTurn()) return null
+                false
             } else {
-                AIPlayer.chooseCard()
-                humanTurn = true
-                continue
+                AIPlayer.takeTurn()
+                true
             }
         }
         return true
