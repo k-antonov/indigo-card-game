@@ -17,7 +17,6 @@ abstract class Player {
     fun takeTurn(): Boolean {
         if (hand.isEmpty()) {
             if (DrawDeck.isEmpty()) {
-                println("All empty")
                 return false
             }
             draw()
