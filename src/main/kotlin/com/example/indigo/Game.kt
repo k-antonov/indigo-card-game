@@ -1,13 +1,14 @@
 package com.example.indigo
 
 fun main() {
-    Game.play()
+    Game().play()
 }
 
-object Game {
+private class Game {
     private var isFinished: Boolean = false
-    // todo add winner
-
+    private val table = Table()
+    private val humanPlayer = HumanPlayer()
+    private val aiPlayer = AIPlayer()
     fun play() {
         when (determineTheWinner()) {
             null -> println(Message.GAME_OVER)
@@ -17,15 +18,26 @@ object Game {
     }
 
     private fun determineTheWinner(): Boolean? {
-        var humanTurn = playFirst() ?: return null
-        Table.printInitialCards()
+        val humanFirst = playFirst() ?: return null
+        var humanTurn = humanFirst
+        var currentCard: Card
+        var topCard: Card
+        table.printInitialCards()
         while (!isFinished) {
-            Table.render()
+            table.render()
+            topCard = PutDeck.collection.last() // top card before player's turn -> currentCard comes on top after
+            // todo вынести DRY в отдельную функцию
             humanTurn = if (humanTurn) {
-                if (!HumanPlayer.takeTurn()) return null
+                currentCard = humanPlayer.takeTurn() ?: return null
+                if (areCardsSimilar(topCard, currentCard)) {
+                    println("Player Similar!")
+                }
                 false
             } else {
-                if (!AIPlayer.takeTurn()) return null
+                currentCard = aiPlayer.takeTurn() ?: return null
+                if (areCardsSimilar(topCard, currentCard)) {
+                    println("AI Similar!")
+                }
                 true
             }
         }
@@ -42,10 +54,14 @@ object Game {
         if (answer == "exit") return null
         return answer == "yes"
     }
+
+    private fun areCardsSimilar(card1: Card, card2: Card): Boolean {
+        return card1.rank == card2.rank || card1.suit == card2.suit
+    }
 }
 
-object Table {
-    private const val initCardsAmount = 4
+private class Table {
+    private val initCardsAmount = 4
 
     init {
         DrawDeck.putCards(PutDeck, initCardsAmount)

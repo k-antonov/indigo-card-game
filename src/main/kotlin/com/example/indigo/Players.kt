@@ -2,6 +2,8 @@ package com.example.indigo
 
 abstract class Player {
     protected val hand = Hand()
+    protected val wonDeck = WonDeck()
+    protected var points = 0
     companion object {
         const val cardsToDraw = 6
     }
@@ -12,19 +14,26 @@ abstract class Player {
 
     protected abstract fun displayHand(): Unit
 
-    protected abstract fun chooseCard(): Boolean
+    protected abstract fun chooseCard(): Int?
 
-    fun takeTurn(): Boolean {
+    // todo изменение тут
+    fun takeTurn(): Card? {
         if (hand.isEmpty()) {
             if (DrawDeck.isEmpty()) {
-                return false
+                return null
             }
             draw()
         }
         displayHand()
-        if (!chooseCard()) return false
-        return true
+        val chosenCardNum = chooseCard() ?: return null
+        val currentCard = getCardByNumber(chosenCardNum)
+        putChosenCard(chosenCardNum)
+        return currentCard
     }
+
+    private fun getCardByNumber(num: Int) = hand.collection[num - 1]
+
+    private fun putChosenCard(cardNum: Int) = hand.putCards(PutDeck, 1, cardNum)
 
     private fun draw() = DrawDeck.putCards(hand, cardsToDraw)
 
@@ -37,7 +46,7 @@ abstract class Player {
     }
 }
 
-object HumanPlayer : Player() {
+class HumanPlayer : Player() {
     override fun displayHand() {
         var indexesAndCards = ""
         hand.collection.forEachIndexed { index, card ->
@@ -46,27 +55,28 @@ object HumanPlayer : Player() {
         println(Message.HAND.text.format(indexesAndCards))
     }
 
-    override fun chooseCard(): Boolean {
-        var choice = ""
+    override fun chooseCard(): Int? {
+        var input = ""
         val size = hand.collection.size
         val range = "(1-$size):"
         do {
             println(Message.CHOOSE.text.format(range))
-            choice = readLine().toString()
-            if (choice == "exit") return false
-        } while (choice.toIntOrNull() !in 1..size)
-        hand.putCards(PutDeck, 1, choice.toInt())
+            input = readLine().toString()
+            if (input == "exit") return null
+        } while (input.toIntOrNull() !in 1..size)
+        val chosenCardNum = input.toInt()
         println()
-        return true
+        return chosenCardNum
     }
 }
 
-object AIPlayer : Player() {
+class AIPlayer : Player() {
+    private val chosenCardNum = 1
+
     override fun displayHand() {}
 
-    override fun chooseCard(): Boolean {
+    override fun chooseCard(): Int {
         println(Message.AI_TURN.text.format(hand.collection[0]))
-        hand.putCards(PutDeck, 1, 1)
-        return true
+        return chosenCardNum // todo убрать затычку
     }
 }
